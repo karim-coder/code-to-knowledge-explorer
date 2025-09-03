@@ -1,5 +1,5 @@
 // API client for communicating with the backend
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8001";
 
 export interface ParsedFunction {
   name: string;
@@ -8,18 +8,51 @@ export interface ParsedFunction {
   docstring: string | null;
 }
 
-export interface ParsedMethod extends ParsedFunction {}
-
 export interface ParsedClass {
   name: string;
   bases: string[];
   docstring: string | null;
-  methods: ParsedMethod[];
+  methods: ParsedFunction[];
+}
+
+export interface ImportInfo {
+  name?: string;
+  module?: string;
+  asname: string | null;
+  type: "import" | "from_import";
+}
+
+export interface Relationship {
+  caller?: string | null;
+  callee?: string;
+  object?: string;
+  method?: string;
+  attribute?: string;
+  type: "function_call" | "method_call" | "attribute_access";
+}
+
+export interface CodeMetrics {
+  total_lines: number;
+  code_lines: number;
+  function_count: number;
+  class_count: number;
+  complexity_score: number;
+  relationship_density: number;
+  documentation_coverage: number;
 }
 
 export interface ParseResult {
   functions: ParsedFunction[];
   classes: ParsedClass[];
+  imports: ImportInfo[];
+  relationships: {
+    function_calls: Relationship[];
+    class_inheritance: Relationship[];
+    method_calls: Relationship[];
+    attribute_access: Relationship[];
+  };
+  metrics: CodeMetrics;
+  insights: string[];
 }
 
 export interface ErrorResult {
