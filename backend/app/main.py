@@ -8,12 +8,18 @@ def health():
     return {"status": "ok"}
 
 @app.get("/parse/python")
-def parse_python_repo(path: str = "."):
+def parse_python_file(path: str = "./examples/python_project/hello.py"):
     """
-    Example: /parse/python?path=./examples/python_project
-    """
-    return python_parser.parse_repo(path)
+    Parse a Python file and return structured information.
 
+    Args:
+        path: Path to the Python file to parse.
+
+    Returns:
+        JSON with functions and classes, or error message.
+    """
+    result = python_parser.parse_python_file(path)
+    return result
 
 @app.get("/")
 def root():
